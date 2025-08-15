@@ -1,14 +1,15 @@
-# Serv00/CT8 SSH 自动执行脚本
+# SSH 自动执行脚本 (Auto-Proxy Version)
 
-本项目通过 **GitHub Actions** 定时或手动执行 SSH 登录 Serv00/CT8 主机，并运行自定义命令。支持 **SOCKS5 多代理检测**，任务完成后会将执行日志推送到 Telegram。
+本项目通过 **GitHub Actions** 定时或手动执行 SSH 登录 Serv00/CT8 主机，并运行自定义命令。支持 **SOCKS5 多代理检测**，并能根据代理配置自动切换连接模式。任务完成后会将执行日志推送到 Telegram。
 
 ---
 
 ## 功能特性
 - **多账号批量执行**：通过 JSON 格式配置，轻松管理多个 SSH 账号。
 - **灵活的命令执行**：支持通过多种方式（手动输入、Repository Variables、Secrets）定义要在远程主机上执行的命令。
-- **智能代理检测**：自动检测 SOCKS5 代理列表，并使用第一个可用的代理执行 SSH 连接。
-- **高效网络策略**：SSH 连接通过代理，而 Telegram 推送则直连，确保通知的及时性。
+- **智能代理检测**：如果设置了 SOCKS5 代理，工作流会自动检测代理列表，并使用第一个可用的代理执行 SSH 连接。
+- **智能连接模式**：当 `SOCKS5_PROXY` 未设置时，工作流将自动切换到直接连接模式，无需代理。
+- **高效网络策略**：SSH 连接通过代理（如果配置），而 Telegram 推送则直连，确保通知的及时性。
 - **实时日志推送**：任务执行结果（包括代理检测详情）将自动推送到您的 Telegram，方便您随时掌握任务状态。
 - **多种触发方式**：支持按计划定时执行，也支持在 GitHub Actions 页面手动触发。
 
@@ -18,8 +19,7 @@
 ```
 .github/
   workflows/
-    start.yml   # GitHub Actions 工作流配置
-start.sh        # (可选) 远程执行的脚本示例
+    start-autoproxy.yml
 ```
 
 ---
@@ -41,7 +41,7 @@ start.sh        # (可选) 远程执行的脚本示例
 | `ACCOUNTS_JSON`         | 您的 SSH 账号信息，格式为 JSON 数组，例如：<br>`[{"username":"u1","password":"p1","panel":"host1"},{"username":"u2","password":"p2","panel":"host2"}]` |
 | `TELEGRAM_BOT_TOKEN`    | 您的 Telegram 机器人 Token (通过 @BotFather 获取)。 |
 | `TELEGRAM_CHAT_ID`      | 您的 Telegram Chat ID (可通过 @userinfobot 获取)。 |
-| `SOCKS5_PROXY`          | SOCKS5 代理列表，每行一个，例如：<br>`socks5://user:pass@1.2.3.4:1080`<br>`socks5://5.6.7.8:1080` |
+| `SOCKS5_PROXY`          | (可选) SOCKS5 代理列表，每行一个。如果留空，将直接连接。<br>例如：<br>`socks5://user:pass@1.2.3.4:1080`<br>`socks5://5.6.7.8:1080` |
 | `CUSTOM_COMMAND`        | (可选) 默认的远程执行命令，例如 `bash start.sh`。 |
 
 #### b. Variables (用于非敏感信息)
@@ -62,10 +62,10 @@ start.sh        # (可选) 远程执行的脚本示例
 ---
 
 ### 4. 配置定时触发
-您可以根据需要修改 [`start.yml`](.github/workflows/start.yml) 中的 `cron` 表达式来调整定时任务的执行时间。
+您可以根据需要修改 [`start-autoproxy.yml`](.github/workflows/start-autoproxy.yml) 中的 `cron` 表达式来调整定时任务的执行时间。
 ```yaml
 schedule:
-  - cron: "14 13 */10 * *" # 这是 UTC 时间
+  - cron: "23 8 * * *" # 这是 UTC 时间
 ```
 **注意**：GitHub Actions 使用的是 UTC 时间，您需要根据您所在的时区进行换算（例如，北京时间 = UTC+8）。
 
@@ -73,9 +73,9 @@ schedule:
 
 ### 5. 手动触发工作流
 1.  进入您的仓库页面，点击 **Actions** 选项卡。
-2.  在左侧选择 **Serv00/CT8 SSH Login & Run start.sh** 工作流。
+2.  在左侧选择 **Serv00/CT8 SSH Login & Run start.sh (Auto Proxy Logic)** 工作流。
 3.  点击 **Run workflow** 下拉菜单。
-4.  (可选) 在 **Custom command to execute** 输入框中填写您希望本次任务执行的命令。
+4.  (可选) 在 **要执行的自定义命令** 输入框中填写您希望本次任务执行的命令。
 5.  点击 **Run workflow** 按钮立即执行。
 
 ---
@@ -83,6 +83,7 @@ schedule:
 ## 常见问题
 
 ### Q1: 执行时提示 "没有可用的 SOCKS5 代理"
+- 仅当您设置了 `SOCKS5_PROXY` 时才会出现此问题。
 - 请检查 `SOCKS5_PROXY` Secret 是否已正确填写，并确保代理格式无误。
 - 确认您的代理服务正在运行，并且 GitHub Actions 服务器可以访问该代理的 IP 和端口。
 
@@ -93,7 +94,5 @@ schedule:
 ### Q3: 如何添加更多账号？
 - 只需在 `ACCOUNTS_JSON` Secret 中按照 JSON 数组的格式添加更多的账号对象即可。
 
----
-
-## 许可证
-[MIT License](LICENSE)
+### Q4: 如何不使用代理直接连接？
+- 只需将 `SOCKS5_PROXY` 这个 Secret 留空或直接删除即可。工作流会自动判断并采用直接连接方式。
