@@ -96,3 +96,8 @@ schedule:
 
 ### Q4: 如何不使用代理直接连接？
 - 只需将 `SOCKS5_PROXY` 这个 Secret 留空或直接删除即可。工作流会自动判断并采用直接连接方式。
+
+---
+
+## Star
+![Stargazers over time](https://starchart.cc/Git-think/ssh-auto-scripts.svg?variant=adaptive)
