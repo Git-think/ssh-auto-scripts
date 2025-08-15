@@ -1,6 +1,6 @@
 # SSH 自动执行脚本 (Auto-Proxy Version)
 
-本项目通过 **GitHub Actions** 定时或手动执行 SSH 登录 Serv00/CT8 主机，并运行自定义命令。支持 **SOCKS5 多代理检测**，并能根据代理配置自动切换连接模式。任务完成后会将执行日志推送到 Telegram。
+本项目通过 **GitHub Actions** 定时或手动执行 SSH 登录主机，并运行自定义命令。支持 **SOCKS5 多代理检测**，并能根据代理配置自动切换连接模式。任务完成后会将执行日志推送到 Telegram。
 
 ---
 
@@ -19,7 +19,7 @@
 ```
 .github/
   workflows/
-    start-autoproxy.yml
+    ssh-auto-scripts.yml
 ```
 
 ---
@@ -73,7 +73,7 @@ schedule:
 
 ### 5. 手动触发工作流
 1.  进入您的仓库页面，点击 **Actions** 选项卡。
-2.  在左侧选择 **Serv00/CT8 SSH Login & Run start.sh (Auto Proxy Logic)** 工作流。
+2.  在左侧选择 **SSH Login & Run COMMAND (SOCKS5 Check + TG Direct + Proxy Info)** 工作流。
 3.  点击 **Run workflow** 下拉菜单。
 4.  (可选) 在 **要执行的自定义命令** 输入框中填写您希望本次任务执行的命令。
 5.  点击 **Run workflow** 按钮立即执行。
