@@ -1,4 +1,4 @@
-name: "Serv00/CT8 SSH Login & Run start.sh (Auto Proxy Logic)"
+name: "SSH Login & Run COMMAND (SOCKS5 Check + TG Direct + Proxy Info)"
 
 on:
   workflow_dispatch:
