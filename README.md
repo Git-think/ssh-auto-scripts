@@ -38,7 +38,7 @@
 
 | Secret 名称             | 描述 |
 |-------------------------|------|
-| `ACCOUNTS_JSON`         | 您的 SSH 账号信息，格式为 JSON 数组，例如：<br>`[{"username":"u1","password":"p1","panel":"host1"},{"username":"u2","password":"p2","panel":"host2"}]` |
+| `ACCOUNTS_JSON`         | 您的 SSH 账号信息，格式为 JSON 数组，例如：<br>`[{"username":"u1","password":"p1","panel":"host1"},{"username":"u2","password":"p2","panel":"host2"}]` (panel为主机地址)|
 | `TELEGRAM_BOT_TOKEN`    | 您的 Telegram 机器人 Token (通过 @BotFather 获取)。 |
 | `TELEGRAM_CHAT_ID`      | 您的 Telegram Chat ID (可通过 @userinfobot 获取)。 |
 | `SOCKS5_PROXY`          | (可选) SOCKS5 代理列表，每行一个。如果留空，将直接连接。<br>例如：<br>`socks5://user:pass@1.2.3.4:1080`<br>`socks5://5.6.7.8:1080` |
