@@ -62,7 +62,7 @@
 ---
 
 ### 4. 配置定时触发
-您可以根据需要修改 [`start-autoproxy.yml`](.github/workflows/start-autoproxy.yml) 中的 `cron` 表达式来调整定时任务的执行时间。
+您可以根据需要修改 [`start-autoproxy.yml`](.github/workflows/ssh-auto-scripts.yml) 中的 `cron` 表达式来调整定时任务的执行时间。
 ```yaml
 schedule:
   - cron: "23 8 * * *" # 这是 UTC 时间
